@@ -12,8 +12,14 @@ jobs:
           python-version: '3.12'
       - name: Test all 16 identities
         run: python -m unittest discover -s simulation -p 'test_*.py' -v
+      - name: Validate JavaScript syntax
+        run: |
+          node --check assets/app.js
+          node --check examples/ttn-payload-formatter.js
       - name: Produce deterministic outputs
         run: python simulation/chipless.py --bits 1111 --seed 2024 --noise-db 0.8 --trials 5 --out results
+      - name: Verify CSV adapter
+        run: python examples/detect_csv.py results/spectrum.csv --threshold-db 4.5
       - name: Archive synthetic results
         uses: actions/upload-artifact@v4
         with:

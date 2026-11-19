@@ -1,0 +1,55 @@
+{
+  "schema": "vn-chipless-lab/1.0",
+  "mode": "simulation_only",
+  "country": "VN",
+  "rf": {
+    "lorawan_profile": "AS923-2",
+    "stack_frequency_plan_candidates": [
+      "AS_923_2",
+      "AS_923_2_NDT",
+      "AS_923_2_DT"
+    ],
+    "illustrative_channels_mhz": [
+      921.4,
+      921.6
+    ],
+    "lawful_band_example_mhz": [
+      920,
+      923
+    ],
+    "lpwan_max_erp_mw": 25,
+    "end_device_max_duty_cycle": 0.01,
+    "gateway_max_duty_cycle": 0.1,
+    "radio_transmission_enabled": false,
+    "note": "Do not assume band label alone grants permission. Select exact plan from TTN/stack version and validate equipment, frequency edges, emissions, duty cycle and relevant regulations."
+  },
+  "sensing": {
+    "classic_ieee_notches_ghz": [
+      1.4,
+      1.8,
+      2.4,
+      5.2
+    ],
+    "classic_ieee_requires_controlled_rf_test": true,
+    "low_cost_candidate_notch_ghz": 2.44,
+    "low_cost_candidate_id_bits": 1,
+    "low_cost_candidate_status": "hypothesis_only",
+    "note": "2.44 GHz is an illustrative separate sensing frontend; availability for RFID reader TX requires regulatory and laboratory validation. LoRaWAN AS923-2 DOES NOT set sensing frequency."
+  },
+  "evaluation": {
+    "seed": 20261119,
+    "trials_per_class": 500,
+    "noise_sigma_db": 3.2,
+    "impulsive_interference_probability": 0.12,
+    "impulsive_interference_amplitude_db": 18,
+    "threshold_db": 4.5
+  },
+  "ring": {
+    "states": 108,
+    "valid_event_states": 96,
+    "id_bits": 4,
+    "quality_states": 3,
+    "flags": 2,
+    "actual_radio_phy": "LoRaWAN compliant bytes; NOT 27-FSK / Base27 modulation"
+  }
+}

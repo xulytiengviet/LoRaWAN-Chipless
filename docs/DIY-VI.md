@@ -1,3 +1,5 @@
+> **Ghi chú cập nhật Việt Nam 2026:** Xem [Vietnam Field Lab](../vn-lab.html) và [giao thức quốc gia](VIETNAM-RESEARCH.md) trước khi thực nghiệm RF. Bài báo EU868 không phải hướng dẫn phát sóng 868 MHz tại Việt Nam.
+
 # Sổ tay DIY — tái lập kiến trúc LoRaWAN Chipless RFID (tiếng Việt)
 
 **Phiên bản:** v1.0 · **Đích nghiên cứu:** Gehron, Bakri, El Hadidy & Hahn, IEEE IoTaIS 2024, pp. 113–117, DOI [10.1109/IoTaIS64014.2024.10799492](https://doi.org/10.1109/IoTaIS64014.2024.10799492)
@@ -175,7 +177,7 @@ FHS detects 4 bits
 4. ESP32 B nhận ESP-NOW, đưa ID vào hàng đợi → radio LoRaWAN gửi một byte lên The Things Stack. Dùng **LoRaWAN stack có OTAA đầy đủ**, không chỉ `LoRa.begin()` rồi gọi là LoRaWAN.
 5. Chạy end-to-end với **ID 0x0F (15)**, xác minh payload uplink nguyên vẹn. Khóa OTAA nằm ở firmware / provisioning an toàn, **không lưu GitHub, không hiển thị trình duyệt**.
 
-**Vùng tần số:** bài báo thực nghiệm ở **EU868**. TTN liệt kê **Việt Nam AS923-925 (“AS2”)**, và trong The Things Stack frequency plan `AS_923_925` là băng ≥923 MHz. Đừng nhầm plan này với `AS_923_2` (Group 2, tần số mặc định 921.x MHz) — đó là hai định danh khác nhau. Cấu hình phần cứng/gateway theo kế hoạch hợp lệ tại địa điểm; bản kê TTN không thay thế văn bản pháp luật. Ngoài ra SDR→ESP32 A và ESP32 B→gateway phải cấu hình radio tương thích với thiết bị địa phương, không thể cứ sao chép 868 MHz.
+**Vùng tần số (hiệu đính 19/11/2026):** bài báo dùng EU868. TTN từng liệt kê Việt Nam theo nhãn **AS923-925 (“AS2”)**, nhưng văn bản hợp nhất **01/VBHN-BKHCN ngày 04/06/2025, Phụ lục 19** nêu LPWAN miễn giấy phép theo điều kiện **920–923 MHz, ≤25 mW ERP, duty cycle 1% đầu cuối/10% gateway**. LoRa Alliance RP002-1.0.5 mô tả Việt Nam **AS923-2**; The Things Stack `AS_923_2` khác `AS_923_925` (dải ≥923 MHz). Vì vậy không tự động lấy AS_923_925 cho Việt Nam; chọn plan Group 2 thích hợp, đối chiếu thiết bị và quy định thực tế. [Tài liệu chính phủ](https://datafiles.chinhphu.vn/cpp/files/vbpq/2025/6/01-vbhn-bkhcn.pdf) · [Vietnam Field Protocol](VIETNAM-RESEARCH.md). Đoạn SDR→ESP32 A cũng cần được phép phát theo tính chất radio riêng, không thể chuyển nguyên 868 MHz hoặc coi việc sử dụng LoRaWAN đồng nghĩa cho phép sweep 1.2–5.4 GHz.
 
 ## 7 — The Things Stack: uplink thật
 

@@ -15,7 +15,12 @@ jobs:
       - name: Validate JavaScript syntax
         run: |
           node --check assets/app.js
+          node --check assets/vn-lab.js
           node --check examples/ttn-payload-formatter.js
+      - name: Vietnam circular event and RF policy regression
+        run: python -m unittest discover -s vn -p 'test_*.py' -v
+      - name: Vietnam paired benchmark
+        run: python vn/reader.py --trials 100 --seed 20261119 --out results/vn
       - name: Produce deterministic outputs
         run: python simulation/chipless.py --bits 1111 --seed 2024 --noise-db 0.8 --trials 5 --out results
       - name: Verify CSV adapter

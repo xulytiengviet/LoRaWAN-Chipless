@@ -1,6 +1,6 @@
 # Vietnam-first v1.1 — cập nhật 2026
 
-> **[Mở Vietnam Field Lab: thử nghiệm giảm nhiễu, mô hình chi phí/năng lượng, Ring-108 và preflight AS923-2](vn-lab.html)** · [Giao thức kiểm chứng chi tiết](docs/VIETNAM-RESEARCH.md)
+> **[Mở Vietnam Field Lab: thử nghiệm giảm nhiễu, mô hình chi phí/năng lượng, Ring-108 và preflight AS923-2](vn-lab.html)** · [Giao thức kiểm chứng chi tiết](docs/VIETNAM-RESEARCH.md) · [Thiết kế phần cứng DIY](docs/HARDWARE-VN.md)
 >
 > **LƯU Ý QUY ĐỊNH:** Việt Nam: LPWAN miễn giấy phép theo điều kiện **920–923 MHz, ≤25 mW ERP, duty cycle đầu cuối ≤1%, gateway ≤10%** (VBHN 01/VBHN-BKHCN, 2025, Phụ lục 19). Lập kế hoạch LoRaWAN **AS923 Group 2**; không dùng `AS_923_925` mặc định chỉ vì một trang TTN cũ liệt kê AS2. Trình mô phỏng **không phát RF**. Tần số khảo sát RFID riêng biệt và cần thẩm định pháp lý. [Nguồn chính thức](https://datafiles.chinhphu.vn/cpp/files/vbpq/2025/6/01-vbhn-bkhcn.pdf).
 >

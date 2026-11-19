@@ -1,3 +1,11 @@
+# Vietnam-first v1.1 — cập nhật 2026
+
+> **[Mở Vietnam Field Lab: thử nghiệm giảm nhiễu, mô hình chi phí/năng lượng, Ring-108 và preflight AS923-2](vn-lab.html)** · [Giao thức kiểm chứng chi tiết](docs/VIETNAM-RESEARCH.md)
+>
+> **LƯU Ý QUY ĐỊNH:** Việt Nam: LPWAN miễn giấy phép theo điều kiện **920–923 MHz, ≤25 mW ERP, duty cycle đầu cuối ≤1%, gateway ≤10%** (VBHN 01/VBHN-BKHCN, 2025, Phụ lục 19). Lập kế hoạch LoRaWAN **AS923 Group 2**; không dùng `AS_923_925` mặc định chỉ vì một trang TTN cũ liệt kê AS2. Trình mô phỏng **không phát RF**. Tần số khảo sát RFID riêng biệt và cần thẩm định pháp lý. [Nguồn chính thức](https://datafiles.chinhphu.vn/cpp/files/vbpq/2025/6/01-vbhn-bkhcn.pdf).
+>
+> Các tuyên bố giảm giá/kích thước/điện và tăng độ chính xác **chưa được xác nhận trên phần cứng**. Phương án một notch trong Vietnam Lab chỉ mang 1 bit, không thay thế thẻ IEEE bốn bit về dung lượng mã.
+
 # LoRaWAN-Chipless — DIY reproduction lab (IEEE IoTaIS 2024)
 
 > **Bản tái lập mô phỏng độc lập** của kiến trúc bài báo *IoT LoRaWAN Chipless RFID Reader based on SDR and Blind Detection Technique* (Gehron, Bakri, El Hadidy, Hahn), IEEE IoTaIS 2024, DOI [10.1109/IoTaIS64014.2024.10799492](https://doi.org/10.1109/IoTaIS64014.2024.10799492). Không phải mã nguồn, CAD hoặc số đo gốc của nhóm tác giả.
@@ -61,4 +69,4 @@ LICENSE                      # MIT (chỉ mã do dự án viết)
 - The Things Network frequency plan: https://www.thethingsnetwork.org/docs/lorawan/frequencies-by-country/
 - The Things Stack OTAA: https://www.thethingsindustries.com/docs/hardware/devices/adding-devices/manual/otaa/
 
-**Lưu ý địa phương:** Bài báo dùng EU868. Tại Việt Nam phải kiểm tra lựa chọn vùng **AS923-925 (AS2)**, phiên bản thông số khu vực, tần số thiết bị và quy định vô tuyến áp dụng. Chỉ phát thử khi có quyền sử dụng và cấu hình phù hợp, hoặc trong đường RF kín có suy hao/che chắn.
+**Lưu ý địa phương (sửa 2026):** Bài báo dùng EU868. Theo 01/VBHN-BKHCN/2025, LPWAN miễn giấy phép theo điều kiện ở Việt Nam dùng **920–923 MHz**; cấu hình AS923 Group 2 với đúng plan gateway, EIRP/ERP, phát xạ và duty cycle. Tham khảo [nghiên cứu pháp lý kỹ thuật](docs/VIETNAM-RESEARCH.md).

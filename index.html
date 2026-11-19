@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#09182a">
+  <meta name="description" content="Phòng lab tái lập mô phỏng IEEE 2024: Chipless RFID, FHS, SDR, LoRa CSS và LoRaWAN. Sổ tay DIY từng bước.">
+  <title>LoRaWAN × Chipless RFID | DIY Reproduction Lab</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-mark">L×C</span><span><b>LoRaWAN Chipless</b><small>DIY Reproduction Lab · 2024 IEEE</small></span></a>
+    <nav aria-label="Điều hướng"><a href="#demo">Mô phỏng</a><a href="#pipeline">Kiến trúc</a><a href="#diy">DIY từng bước</a><a href="#validation">Kiểm chứng</a><a href="#reference">Nguồn</a></nav>
+    <a class="small-btn" href="https://github.com/xulytiengviet/LoRaWAN-Chipless" target="_blank" rel="noopener">GitHub ↗</a>
+  </header>
+
+  <main id="top">
+    <section class="hero content">
+      <div class="eyebrow">REPRODUCIBLE RESEARCH · IEEE IOTAIS 2024</div>
+      <h1>Đọc thẻ <em>không chip, không pin.</em><br>Truyền ID qua LoRaWAN.</h1>
+      <p class="lead">Tái lập nguyên lý từ bài báo <i>IoT LoRaWAN Chipless RFID Reader based on SDR and Blind Detection Technique</i>: quét phổ cộng hưởng, nhận dạng 4 bit, minh họa điều chế LoRa CSS và bản tin TTN — tất cả ngay trong trình duyệt, không cần thiết bị.</p>
+      <div class="hero-actions"><a class="primary" href="#demo">Chạy mô phỏng →</a><a class="secondary" href="#diy">Học cách lắp phần cứng</a></div>
+      <div class="warning"><strong>Phân biệt rõ:</strong> đây là <b>mô phỏng tham số độc lập</b>, không phải dữ liệu đo hoặc mã nguồn nguyên bản của tác giả. Con số <b>5 km</b> trong bài báo là chặng LoRa đến gateway, <b>không phải</b> khoảng cách đầu đọc–thẻ.</div>
+      <div class="metrics">
+        <div><strong>4</strong><span>Notch / bit</span></div>
+        <div><strong>16</strong><span>Mã thẻ</span></div>
+        <div><strong>1,2–5,4</strong><span>GHz · dải kiểm tra</span></div>
+        <div><strong>4 × 4</strong><span>Mảng SRR</span></div>
+        <div><strong>5 km</strong><span>Backhaul thử nghiệm</span></div>
+      </div>
+    </section>
+
+    <section id="demo" class="content section">
+      <div class="section-header"><span class="eyebrow">01 / VIRTUAL LAB</span><h2>Trạm đo chipless RFID tương tác</h2><p>Tắt/bật từng notch để tạo các mã khác nhau. Điều chỉnh nhiễu, ngưỡng phát hiện và độ lợi mảng; thuật toán tự tính công suất ở ba vùng lân cận notch.</p></div>
+      <div class="workspace">
+        <aside class="control-panel">
+          <h3>Thông số mô phỏng</h3>
+          <p class="subtle">Bốn tần số từ bài báo. Độ sâu, độ rộng notch, nhiễu và ngưỡng là <b>giả định của mô hình</b>.</p>
+          <div class="bit-options">
+            <label><input class="tagbit" type="checkbox" data-bit="0" checked><span><b>1,4 GHz</b><small>bit 1</small></span></label>
+            <label><input class="tagbit" type="checkbox" data-bit="1" checked><span><b>1,8 GHz</b><small>bit 2</small></span></label>
+            <label><input class="tagbit" type="checkbox" data-bit="2" checked><span><b>2,4 GHz</b><small>bit 3</small></span></label>
+            <label><input class="tagbit" type="checkbox" data-bit="3" checked><span><b>5,2 GHz</b><small>bit 4</small></span></label>
+          </div>
+          <label class="range-row" for="noise">Nhiễu đo (σ, dB) <output id="noiseLabel">0.8</output></label>
+          <input id="noise" type="range" min="0" max="8" step=".2" value=".8">
+          <label class="range-row" for="threshold">Ngưỡng notch (dB) <output id="thresholdLabel">4.5</output></label>
+          <input id="threshold" type="range" min="1" max="18" step=".5" value="4.5">
+          <label class="range-row" for="seed">Random seed <output id="seedLabel">2024</output></label>
+          <input id="seed" type="range" min="0" max="9999" step="1" value="2024">
+          <label class="inline-switch"><input id="array" type="checkbox" checked><span>Giả định mảng 4×4: +20 dB</span></label>
+          <label class="range-row" for="region">Vùng LoRaWAN (minh họa)</label>
+          <select id="region"><option value="AS923-2">Việt Nam — AS923-2 (tham khảo)</option><option value="EU868">Bài báo — EU868 (868 MHz)</option></select>
+          <div class="button-stack"><button id="run" class="primary" type="button">Đọc thẻ & giải mã</button><button id="benchmark" class="secondary" type="button">Đo kiểm 16 ID × 10 lần</button><button id="export" class="secondary" type="button">Xuất phổ CSV</button></div>
+          <small class="subtle">Mô phỏng chạy offline. Không kết nối SDR, không phát sóng, không gửi dữ liệu tới TTN.</small>
+        </aside>
+        <div class="chart-panel">
+          <div class="chart-top"><div><h3>RCS · Phổ phản xạ tổng hợp</h3><p>Đường màu xanh là RCS tương đối, không phải phép đo dBm đã hiệu chuẩn.</p></div><span class="pill">SYNTHETIC</span></div>
+          <canvas id="rcsChart" role="img" aria-label="Phổ phản xạ RF tổng hợp từ 1,2 đến 5,4 GHz" height="355"></canvas>
+          <div class="legend"><span><i class="dot green"></i> RCS tổng hợp</span><span><i class="dot orange"></i> 4 vị trí cộng hưởng</span></div>
+          <div class="results-grid">
+            <div class="stat"><small>ID thiết kế</small><strong id="requested">1111</strong></div>
+            <div class="stat"><small>ID giải mã</small><strong id="decoded">1111</strong></div>
+            <div class="stat"><small>ID thập phân</small><strong id="decimal">15</strong></div>
+            <div class="stat"><small>Đối chiếu</small><strong id="match" class="success">KHỚP</strong></div>
+          </div>
+          <h4>FHS · So sánh ba vùng: vai trái — lõm — vai phải</h4>
+          <div class="scroll-table"><table><thead><tr><th>Notch (GHz)</th><th>Vai trái</th><th>Lõi</th><th>Vai phải</th><th>Độ lõm</th><th>Bit</th></tr></thead><tbody id="scores"></tbody></table></div>
+        </div>
+      </div>
+      <div class="workspace lower">
+        <div class="chart-panel"><div class="chart-top"><div><h3>LoRa CSS · Waterfall khái niệm</h3><p>Minh họa chirp SF7, BW 125 kHz. <b>Không</b> thay thế GNU Radio LoRa PHY.</p></div><span class="pill">ILLUSTRATION</span></div><canvas id="chirpChart" role="img" aria-label="Đồ thị các chirp LoRa minh họa" height="290"></canvas></div>
+        <div class="chart-panel"><div class="chart-top"><div><h3>The Things Stack · Uplink giả lập</h3><p>Đầu ra JSON dùng để thiết kế payload formatter; không phải bản tin TTN thật.</p></div><span class="pill">MOCK CLOUD</span></div><pre id="payload" class="terminal" aria-live="polite"></pre><div class="badge-line" id="benchResult" aria-live="polite">Đo kiểm Monte Carlo chưa chạy.</div></div>
+      </div>
+    </section>
+
+    <section id="pipeline" class="content section">
+      <div class="section-header"><span class="eyebrow">02 / SYSTEM ENGINEERING</span><h2>Khôi phục đúng kiến trúc bài báo</h2><p>Ba nhóm chức năng riêng biệt: cảm nhận vô tuyến, chuyển đổi ID, và backhaul Internet.</p></div>
+      <div class="pipeline">
+        <div><b>① Thẻ SRR</b><small>4 notch cộng hưởng<br>mảng 4 × 4</small></div><span>→</span>
+        <div><b>② UWB + SDR</b><small>TX/RX bistatic<br>BladeRF + GNU Radio</small></div><span>→</span>
+        <div><b>③ FHS</b><small>Quét vùng chọn lọc<br>so sánh notch</small></div><span>→</span>
+        <div><b>④ LoRa relay</b><small>CSS → ESP32<br>ESP-NOW → ESP32</small></div><span>→</span>
+        <div><b>⑤ TTN cloud</b><small>LoRaWAN gateway<br>OTAA + decoder</small></div>
+      </div>
+      <div class="info-two"><article><h3>LoRa ≠ LoRaWAN</h3><p>Giao thức LoRa CSS dùng ở bước SDR → relay không đồng nghĩa với nút LoRaWAN đã gia nhập mạng. Trong bài, một ESP32 nhận LoRa PHY và chuyển dữ liệu qua ESP-NOW sang ESP32 thứ hai làm LoRaWAN end-device.</p></article><article><h3>“Blind detection” nghĩa là gì?</h3><p>Chưa biết <b>mã bit</b> của thẻ trước khi đọc, nhưng các <b>tần số ứng viên</b> là cố định. Bộ đọc đánh giá từng vùng cộng hưởng đã biết để dựng mã nhị phân, không phải suy ra tất cả tần số vật lý hoàn toàn không có tiên nghiệm.</p></article></div>
+    </section>
+
+    <section id="diy" class="content section">
+      <div class="section-header"><span class="eyebrow">03 / DO IT YOURSELF</span><h2>Phục dựng từng bước — từ 0 đồng phần cứng</h2><p>Làm theo thứ tự để tách lỗi: thuật toán trước, đo RF sau, truyền LoRaWAN cuối cùng. <a href="docs/DIY-VI.md">Mở sổ tay kỹ thuật đầy đủ ↗</a></p></div>
+      <div class="steps">
+        <article><span>01</span><h3>Tái lập bằng Python</h3><p>Tải repo, chạy <code>python simulation/chipless.py --bits 1111 --out results</code>. Kiểm tra CSV, SVG, summary JSON và việc giải mã 1111 → 15.</p><small>ĐẦU RA: RCS SVG + bảng notch</small></article>
+        <article><span>02</span><h3>Kiểm thử 16 tổ hợp</h3><p>Chạy <code>python -m unittest discover -s simulation -v</code>. Thay đổi seed, nhiễu, ngưỡng; ghi sai bit và tỷ lệ nhận đúng.</p><small>ĐẦU RA: phép thử có seed</small></article>
+        <article><span>03</span><h3>Thiết kế thẻ SRR 4 × 4</h3><p>Dùng openEMS/CST/HFSS thiết kế bốn cộng hưởng tại 1.4, 1.8, 2.4, 5.2 GHz. Tối ưu vật liệu, kích thước, tương tác giữa các vòng rồi mới gia công.</p><small>ĐẦU RA: CAD + EM S-parameter</small></article>
+        <article><span>04</span><h3>Lắp trạm SDR có kiểm soát</h3><p>BladeRF 2.0 micro xA4, 2 anten log-periodic 400 MHz–6.2 GHz, cáp SMA, suy hao RF/che chắn. Kiểm tra phát thu trong môi trường RF được cho phép.</p><small>ĐẦU RA: IQ + noise floor</small></article>
+        <article><span>05</span><h3>Thu nền và đo thẻ</h3><p>Ghi phổ khi <b>không có thẻ</b> và <b>có thẻ</b>, cố định hình học và hiệu chỉnh nền. Đưa giá trị phổ vào cùng bộ detector 3 cửa sổ.</p><small>ĐẦU RA: CSV đo và ID</small></article>
+        <article><span>06</span><h3>Tạo cầu LoRa → ESP-NOW</h3><p>Đọc 4 bit, chuyển frame qua LoRa PHY tới ESP32 A, rồi ESP-NOW sang ESP32 B. Dùng CRC và sequence number để tránh gán nhầm thẻ.</p><small>ĐẦU RA: ID tại ESP32 B</small></article>
+        <article><span>07</span><h3>Kết nối The Things Stack</h3><p>Đăng ký LoRaWAN end-device bằng OTAA, chọn frequency plan hợp lệ với quốc gia/gateway, truyền 1 byte ID; tạo payload formatter hiển thị ID thập phân và nhị phân.</p><small>ĐẦU RA: uplink live data thật</small></article>
+        <article><span>08</span><h3>Kiểm chứng và công bố</h3><p>Thử 16 mã × nhiều lần, nhiều khoảng cách và góc đặt thẻ; ghi calibration, RSSI/SNR, lỗi bit, khoảng cách gateway riêng biệt. Không thay số đo bằng giả lập.</p><small>ĐẦU RA: dữ liệu + protocol + CI</small></article>
+      </div>
+      <div class="inventory"><h3>Danh sách thiết bị cơ bản</h3><div class="scroll-table"><table><thead><tr><th>Thiết bị / phần mềm</th><th>Vai trò</th><th>Bắt buộc khi nào?</th></tr></thead><tbody><tr><td>Máy tính + Python / trình duyệt</td><td>Chạy mô phỏng và kiểm thử</td><td>Bước 1</td></tr><tr><td>BladeRF 2.0 micro xA4</td><td>SDR TX/RX 2×2, dải đủ bao phủ 5.2 GHz</td><td>Bước 4</td></tr><tr><td>2 anten log-periodic UWB</td><td>Bistatic TX / RX</td><td>Bước 4</td></tr><tr><td>Thẻ SRR PCB 4×4</td><td>Mang 4 notch mã hóa</td><td>Bước 3–5</td></tr><tr><td>2 ESP32 có LoRa + ESP-NOW</td><td>Cầu LoRa PHY → LoRaWAN</td><td>Bước 6</td></tr><tr><td>LoRaWAN gateway vùng phù hợp</td><td>Chuyển uplink TTN</td><td>Bước 7</td></tr><tr><td>GNU Radio + bladeRF drivers + gr-lora_sdr</td><td>Thu/phát, DSP và LoRa PHY (tích hợp cần phát triển)</td><td>Bước 4–7</td></tr></tbody></table></div></div>
+    </section>
+
+    <section id="validation" class="content section"><div class="section-header"><span class="eyebrow">04 / SCIENTIFIC VALIDATION</span><h2>Tái lập được gì? Chưa chứng minh được gì?</h2></div>
+      <div class="comparison">
+        <div class="compare-card"><h3>✓ Có thể tái lập ngay</h3><p>4 vị trí cộng hưởng, nguyên lý 3 miền, 16 tổ hợp 4 bit, mã 1111 → 15, số liệu tạo sinh có random seed, Monte Carlo và hình phổ tổng hợp.</p></div>
+        <div class="compare-card"><h3>≈ Chỉ mô phỏng nguyên lý</h3><p>Độ sâu notch, bề rộng cộng hưởng, dao động RCS, +20 dB gain, chirp waterfall, payload cloud. Đây là các giả định hoặc minh họa, không phải kết quả điện từ toàn sóng hay bản tin thật.</p></div>
+        <div class="compare-card"><h3>✕ Cần thiết bị để xác nhận</h3><p>RCS thực, khoảng cách đọc thẻ, độ nhạy phát hiện, độ chính xác ở nhiều góc, độ tin cậy truyền 5 km, hệ số đường truyền và kết nối TTN trực tiếp.</p></div>
+      </div>
+    </section>
+
+    <section id="reference" class="content section refs"><div class="section-header"><span class="eyebrow">05 / SOURCE & CITATION</span><h2>Nguồn gốc kỹ thuật</h2></div><p>Bài báo: Gehron, K.; Bakri, I.; El Hadidy, M.; Hahn, N., <i>IoT LoRaWAN Chipless RFID Reader based on SDR and Blind Detection Technique</i>, IoTaIS 2024, pp. 113–117. <a href="https://doi.org/10.1109/IoTaIS64014.2024.10799492">DOI ↗</a>.</p><p>Thành phần tham khảo: <a href="https://github.com/tapparelj/gr-lora_sdr">gr-lora_sdr</a> · <a href="https://www.nuand.com/product/bladeRF-xA4/">Nuand BladeRF</a> · <a href="https://www.thethingsnetwork.org/docs/lorawan/frequencies-by-country/">TTN frequency plans</a> · <a href="https://www.thethingsindustries.com/docs/hardware/devices/adding-devices/manual/otaa/">OTAA guide</a>.</p><p class="subtle">Giới hạn tái lập: bài báo không công bố trong 5 trang toàn bộ CAD hình học SRR, mẫu IQ thô, thuật toán FHS đầy đủ/threshold chính xác và kết quả lặp thống kê. Muốn tuyên bố khớp số liệu thực cần thu thập các tài sản gốc hoặc đo xác minh độc lập.</p></section>
+  </main>
+  <footer><div class="content footer-inner"><span>LoRaWAN × Chipless RFID · Open reproducibility study</span><span>Mô phỏng khác đo thực · Kiểm soát RF · IEEE 2024</span></div></footer>
+</body>
+</html>

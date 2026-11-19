@@ -12,7 +12,7 @@
 <body>
   <header class="topbar">
     <a class="brand" href="#top"><span class="brand-mark">L×C</span><span><b>LoRaWAN Chipless</b><small>DIY Reproduction Lab · 2024 IEEE</small></span></a>
-    <nav aria-label="Điều hướng"><a href="#demo">Mô phỏng</a><a href="#pipeline">Kiến trúc</a><a href="#diy">DIY từng bước</a><a href="#validation">Kiểm chứng</a><a href="#reference">Nguồn</a></nav>
+    <nav aria-label="Điều hướng"><a href="vn-lab.html">🇻🇳 Vietnam Lab</a><a href="#demo">Mô phỏng</a><a href="#pipeline">Kiến trúc</a><a href="#diy">DIY từng bước</a><a href="#validation">Kiểm chứng</a><a href="#reference">Nguồn</a></nav>
     <a class="small-btn" href="https://github.com/xulytiengviet/LoRaWAN-Chipless" target="_blank" rel="noopener">GitHub ↗</a>
   </header>
 
@@ -21,7 +21,7 @@
       <div class="eyebrow">REPRODUCIBLE RESEARCH · IEEE IOTAIS 2024</div>
       <h1>Đọc thẻ <em>không chip, không pin.</em><br>Truyền ID qua LoRaWAN.</h1>
       <p class="lead">Tái lập nguyên lý từ bài báo <i>IoT LoRaWAN Chipless RFID Reader based on SDR and Blind Detection Technique</i>: quét phổ cộng hưởng, nhận dạng 4 bit, minh họa điều chế LoRa CSS và bản tin TTN — tất cả ngay trong trình duyệt, không cần thiết bị.</p>
-      <div class="hero-actions"><a class="primary" href="#demo">Chạy mô phỏng →</a><a class="secondary" href="#diy">Học cách lắp phần cứng</a></div>
+      <div class="hero-actions"><a class="secondary" href="vn-lab.html">🇻🇳 Vietnam Field Lab →</a><a class="primary" href="#demo">Chạy mô phỏng →</a><a class="secondary" href="#diy">Học cách lắp phần cứng</a></div>
       <div class="warning"><strong>Phân biệt rõ:</strong> đây là <b>mô phỏng tham số độc lập</b>, không phải dữ liệu đo hoặc mã nguồn nguyên bản của tác giả. Con số <b>5 km</b> trong bài báo là chặng LoRa đến gateway, <b>không phải</b> khoảng cách đầu đọc–thẻ.</div>
       <div class="metrics">
         <div><strong>4</strong><span>Notch / bit</span></div>
@@ -52,7 +52,7 @@
           <input id="seed" type="range" min="0" max="9999" step="1" value="2024">
           <label class="inline-switch"><input id="array" type="checkbox" checked><span>Giả định mảng 4×4: +20 dB</span></label>
           <label class="range-row" for="region">Vùng LoRaWAN (minh họa)</label>
-          <select id="region"><option value="AS_923_925">Việt Nam — AS923-925 / AS2 (tham khảo)</option><option value="EU868">Bài báo — EU868 (868 MHz)</option></select>
+          <select id="region"><option value="AS_923_2">Việt Nam — AS923-2 · 920–923 MHz (tham khảo)</option><option value="EU868">Bài báo — EU868 (868 MHz)</option></select>
           <div class="button-stack"><button id="run" class="primary" type="button">Đọc thẻ & giải mã</button><button id="benchmark" class="secondary" type="button">Đo kiểm 16 ID × 10 lần</button><button id="export" class="secondary" type="button">Xuất phổ CSV</button></div>
           <small class="subtle">Mô phỏng chạy offline. Không kết nối SDR, không phát sóng, không gửi dữ liệu tới TTN.</small>
         </aside>
@@ -76,7 +76,7 @@
       </div>
     </section>
 
-    <section id="pipeline" class="content section">
+    <section class="content" style="padding-top:28px"><div class="warning"><strong>Bổ sung Việt Nam 2026:</strong> Dự án đã có <a href="vn-lab.html">phòng nghiên cứu AS923-2</a> theo giới hạn LPWAN 920–923 MHz, tối đa 25 mW ERP và duty cycle theo điều kiện; bản cũ chỉ giữ phục dựng paper EU868. Thiết kế đọc thẻ chipless không tự động được phép phát mọi tần số.</div></section><section id="pipeline" class="content section">
       <div class="section-header"><span class="eyebrow">02 / SYSTEM ENGINEERING</span><h2>Khôi phục đúng kiến trúc bài báo</h2><p>Ba nhóm chức năng riêng biệt: cảm nhận vô tuyến, chuyển đổi ID, và backhaul Internet.</p></div>
       <div class="pipeline">
         <div><b>① Thẻ SRR</b><small>4 notch cộng hưởng<br>mảng 4 × 4</small></div><span>→</span>
